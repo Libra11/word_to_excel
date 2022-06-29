@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2022-06-28 17:39:41
- * @LastEditTime: 2022-06-29 14:16:37
+ * @LastEditTime: 2022-06-29 14:31:47
  * @LastEditors: Libra
  * @Description: 渲染进程
  * @FilePath: /word_to_excel/render.js
@@ -89,7 +89,6 @@ function check() {
     .replaceRegex(wordEnterRegex, "")
     .trim()
     .trimFirst();
-  console.log(originText);
   const arrData = splitData(originText);
 }
 
@@ -154,8 +153,9 @@ function clearText() {
  */
 // 匹配 数字+顿号
 const numberPauseRegex = /\d+、/g;
-// 匹配 数字+点
-const numberDotRegex = /\d+\./g;
+// 匹配 数字+点+非数字
+const numberDotRegex = /\d+\.\D/g;
+// const numberDotRegex = /\d+\./g;
 // 匹配 数字+中文点
 const numberChineseDotRegex = /\d+\．/g;
 // 匹配 A-D+顿号
