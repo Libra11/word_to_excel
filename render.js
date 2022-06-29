@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2022-06-28 17:39:41
- * @LastEditTime: 2022-06-29 10:29:45
+ * @LastEditTime: 2022-06-29 10:50:22
  * @LastEditors: Libra
  * @Description: 渲染进程
  * @FilePath: /word_to_excel/render.js
@@ -12,7 +12,8 @@ const textarea2 = document.getElementById("textarea2");
 // 获取 select dom
 const select = document.getElementById("select");
 const select2 = document.getElementById("select2");
-const select3 = document.getElementById("select3");
+// const select3 = document.getElementById("select3");
+const select4 = document.getElementById("select4");
 // 获取处理 button
 const handleButton = document.getElementById("btn");
 const checkButton = document.getElementById("btn2");
@@ -23,7 +24,7 @@ let originText = "";
 let option = {
   selectedText: "pause",
   selectedText2: "&",
-  length: "4",
+  selectedText3: "$",
 };
 // 监听文本框的变化
 textarea.addEventListener("input", () => {
@@ -36,8 +37,11 @@ select.addEventListener("change", () => {
 select2.addEventListener("change", () => {
   option.selectedText2 = select2.options[select2.selectedIndex].text;
 });
-select3.addEventListener("change", () => {
-  option.length = select3.options[select3.selectedIndex].value;
+// select3.addEventListener("change", () => {
+//   option.length = select3.options[select3.selectedIndex].value;
+// });
+select4.addEventListener("change", () => {
+  option.selectedText3 = select4.options[select4.selectedIndex].text;
 });
 // 监听 button 的点击
 handleButton.addEventListener("click", () => {
@@ -47,7 +51,7 @@ checkButton.addEventListener("click", () => {
   check();
 });
 downloadButton.addEventListener("click", () => {
-  handleText();
+  downloadText();
 });
 clearButton.addEventListener("click", () => {
   clearText();
@@ -60,11 +64,13 @@ function downloadText() {
   const regex2 =
     option.selectedText === "pause" ? lashPauseRegex : lashDotRegex;
   replaceRegex(regex, option.selectedText2)
-    .replaceRegex(regex2, option.selectedText2)
+    .replaceRegex(regex2, option.selectedText3)
     .replaceRegex(wordEnterRegex, "")
     .trim()
     .trimFirst();
+  console.log("arrData");
   const arrData = splitData(originText);
+  console.log(arrData);
   downloadExcel(arrData);
 }
 // 检测
@@ -74,7 +80,7 @@ function check() {
   const regex2 =
     option.selectedText === "pause" ? lashPauseRegex : lashDotRegex;
   replaceRegex(regex, option.selectedText2)
-    .replaceRegex(regex2, option.selectedText2)
+    .replaceRegex(regex2, option.selectedText3)
     .replaceRegex(wordEnterRegex, "")
     .trim()
     .trimFirst();
@@ -88,7 +94,7 @@ function handleText() {
   const regex2 =
     option.selectedText === "pause" ? lashPauseRegex : lashDotRegex;
   replaceRegex(regex, option.selectedText2)
-    .replaceRegex(regex2, option.selectedText2)
+    .replaceRegex(regex2, option.selectedText3)
     .replaceRegex(wordEnterRegex, "")
     .trim()
     .trimFirst();
@@ -137,17 +143,17 @@ function trimFirst() {
 function splitData(data) {
   const dataArray = data.split(option.selectedText2);
   const a = +dataArray.length;
-  const b = Number(option.length) + 1;
-  alert("检测到" + a / b + "道题");
-  return splitArray(dataArray, b);
+  alert("检测到" + a + "道题");
+  return splitArray(dataArray, option.selectedText3);
 }
-// 一维数组每 num 个拼接为一个二维数组
-function splitArray(array, num) {
-  const result = [];
-  for (let i = 0; i < array.length; i += num) {
-    result.push(array.slice(i, i + num));
+// 将数组里的每一项通过指定的分割符分割成二维数组
+function splitArray(array, symbol) {
+  const arr = [];
+  for (let i = 0; i < array.length; i++) {
+    const arr2 = array[i].split(symbol);
+    arr.push(arr2);
   }
-  return result;
+  return arr;
 }
 // 将数组转为excel文件并下载
 function downloadExcel(data) {
