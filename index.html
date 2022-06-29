@@ -1,0 +1,79 @@
+<!--
+ * @Author: Libra
+ * @Date: 2022-06-28 17:24:24
+ * @LastEditTime: 2022-06-29 10:28:56
+ * @LastEditors: Libra
+ * @Description: 
+ * @FilePath: /word_to_excel/index.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- use the latest version -->
+<script lang="javascript" src="xlsx.full.min.js"></script>
+  <title>Libra</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      width: 100vw;
+      height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    .container #textarea {
+      margin: 20px 0;
+      width: 100%;
+    }
+    .container button {
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 下拉框 -->
+  <div class="option">
+    题号匹配：
+  <select id="select">
+    <option value ="pause">顿号</option>
+    <option value ="dot">点</option>
+  </select>
+    分隔符选择
+  <select id="select2">
+    <option value ="0">&</option>
+    <option value ="1">@</option>
+    <option value ="2">#</option>
+    <option value ="3">$</option>
+    <option value ="4">%</option>
+  </select>
+    选项个数
+  <select id="select3">
+    <option value ="4">4</option>
+    <option value ="2">2</option>
+    <option value ="3">3</option>
+    <option value ="5">5</option>
+    <option value ="6">6</option>
+    <option value ="7">7</option>
+    <option value ="8">8</option>
+  </select>
+  </div>
+  <textarea name="textarea" id="textarea" cols="30" rows="10"></textarea>
+  <textarea name="textarea2" id="textarea2" cols="30" rows="10"></textarea>
+  <div style="margin-top: 20px;">
+    <button id="btn2">检测</button>
+    <button id="btn">处理</button>
+    <button id="btn3">生成</button>
+    <button id="btn4">清空</button>
+  </div>
+  </div>
+  <script src="render.js"></script>
+</body>
+</html>

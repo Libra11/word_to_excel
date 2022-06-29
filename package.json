@@ -1,0 +1,13 @@
+{
+  "name": "word_to_excel",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "Libra",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron-reloader": "^1.2.3"
+  }
+}
