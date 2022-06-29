@@ -1,7 +1,7 @@
 <!--
  * @Author: Libra
  * @Date: 2022-06-28 17:24:24
- * @LastEditTime: 2022-06-29 10:45:46
+ * @LastEditTime: 2022-06-29 14:13:10
  * @LastEditors: Libra
  * @Description: 
  * @FilePath: /word_to_excel/index.html
@@ -35,18 +35,30 @@
     .container button {
       width: 100px;
     }
+    select {
+      margin-right: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <!-- 下拉框 -->
   <div class="option">
-    题号匹配：
+    题号匹配:
   <select id="select">
     <option value ="pause">顿号</option>
     <option value ="dot">点</option>
+    <option value ="chineseDot">中文点</option>
+    <option value ="blank">空格</option>
   </select>
-    题号分隔符
+    选项匹配:
+  <select id="select3">
+    <option value ="pause">顿号</option>
+    <option value ="dot">点</option>
+    <option value ="chineseDot">中文点</option>
+    <option value ="blank">空格</option>
+  </select>
+    题号分隔符:
   <select id="select2">
     <option value ="0">&</option>
     <option value ="1">@</option>
@@ -54,7 +66,7 @@
     <option value ="3">$</option>
     <option value ="4">%</option>
   </select>
-    选项分隔符
+    选项分隔符:
     <select id="select4">
     <option value ="3">$</option>
     <option value ="0">&</option>
@@ -62,20 +74,15 @@
     <option value ="2">#</option>
     <option value ="4">%</option>
   </select>
-    <!-- 选项个数
-  <select id="select3">
-    <option value ="4">4</option>
-    <option value ="2">2</option>
-    <option value ="3">3</option>
-    <option value ="5">5</option>
-    <option value ="6">6</option>
-    <option value ="7">7</option>
-    <option value ="8">8</option>
-  </select> -->
   </div>
   <textarea name="textarea" id="textarea" cols="30" rows="10"></textarea>
   <textarea name="textarea2" id="textarea2" cols="30" rows="10"></textarea>
   <div style="margin-top: 20px;">
+    请输入生成文件名:
+    <input type="text" id="input">
+  </div>
+  <div style="margin-top: 20px;">
+    <button id="btn5">原始检测</button>
     <button id="btn2">检测</button>
     <button id="btn">处理</button>
     <button id="btn3">生成</button>

@@ -5,9 +5,30 @@
   "author": "Libra",
   "license": "MIT",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder --win --x64",
+    "dist2": "electron-builder --universal"
   },
   "dependencies": {
     "electron-reloader": "^1.2.3"
+  },
+  "devDependencies": {
+    "electron-builder": "^23.1.0",
+    "electron": "17.0.0"
+  },
+  "build": {
+    "appId": "com.xxx.app",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    }
   }
 }

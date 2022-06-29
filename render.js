@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2022-06-28 17:39:41
- * @LastEditTime: 2022-06-29 10:50:22
+ * @LastEditTime: 2022-06-29 14:16:37
  * @LastEditors: Libra
  * @Description: 渲染进程
  * @FilePath: /word_to_excel/render.js
@@ -9,26 +9,34 @@
 // 获取 textarea
 const textarea = document.getElementById("textarea");
 const textarea2 = document.getElementById("textarea2");
+const input = document.getElementById("input");
 // 获取 select dom
 const select = document.getElementById("select");
 const select2 = document.getElementById("select2");
-// const select3 = document.getElementById("select3");
+const select3 = document.getElementById("select3");
 const select4 = document.getElementById("select4");
 // 获取处理 button
 const handleButton = document.getElementById("btn");
 const checkButton = document.getElementById("btn2");
 const downloadButton = document.getElementById("btn3");
 const clearButton = document.getElementById("btn4");
+const oriCheckButton = document.getElementById("btn5");
 
 let originText = "";
 let option = {
   selectedText: "pause",
+  selectedText3: "pause",
   selectedText2: "&",
-  selectedText3: "$",
+  selectedText4: "$",
 };
+let fileName = "";
 // 监听文本框的变化
 textarea.addEventListener("input", () => {
   originText = textarea.value;
+});
+// 监听 input 的变化
+input.addEventListener("input", () => {
+  fileName = input.value;
 });
 // 监听 select 的变化
 select.addEventListener("change", () => {
@@ -37,11 +45,11 @@ select.addEventListener("change", () => {
 select2.addEventListener("change", () => {
   option.selectedText2 = select2.options[select2.selectedIndex].text;
 });
-// select3.addEventListener("change", () => {
-//   option.length = select3.options[select3.selectedIndex].value;
-// });
+select3.addEventListener("change", () => {
+  option.selectedText3 = select3.options[select3.selectedIndex].value;
+});
 select4.addEventListener("change", () => {
-  option.selectedText3 = select4.options[select4.selectedIndex].text;
+  option.selectedText4 = select4.options[select4.selectedIndex].text;
 });
 // 监听 button 的点击
 handleButton.addEventListener("click", () => {
@@ -56,49 +64,84 @@ downloadButton.addEventListener("click", () => {
 clearButton.addEventListener("click", () => {
   clearText();
 });
+oriCheckButton.addEventListener("click", () => {
+  checkOriginString();
+});
 
 // 下载文本
 function downloadText() {
-  const regex =
-    option.selectedText === "pause" ? numberPauseRegex : numberDotRegex;
-  const regex2 =
-    option.selectedText === "pause" ? lashPauseRegex : lashDotRegex;
+  const regex = getRegex();
+  const regex2 = getRegex2();
   replaceRegex(regex, option.selectedText2)
-    .replaceRegex(regex2, option.selectedText3)
+    .replaceRegex(regex2, option.selectedText4)
     .replaceRegex(wordEnterRegex, "")
     .trim()
     .trimFirst();
-  console.log("arrData");
   const arrData = splitData(originText);
-  console.log(arrData);
   downloadExcel(arrData);
 }
 // 检测
 function check() {
-  const regex =
-    option.selectedText === "pause" ? numberPauseRegex : numberDotRegex;
-  const regex2 =
-    option.selectedText === "pause" ? lashPauseRegex : lashDotRegex;
+  const regex = getRegex();
+  const regex2 = getRegex2();
   replaceRegex(regex, option.selectedText2)
-    .replaceRegex(regex2, option.selectedText3)
+    .replaceRegex(regex2, option.selectedText4)
     .replaceRegex(wordEnterRegex, "")
     .trim()
     .trimFirst();
+  console.log(originText);
   const arrData = splitData(originText);
+}
+
+// 原始字符检测
+function checkOriginString() {
+  if (checkString(originText, option.selectedText2)) {
+    alert("试题中检测到" + option.selectedText2 + "字符, 请更换题号分隔符");
+    return;
+  }
+  if (checkString(originText, option.selectedText4)) {
+    alert("试题中检测到" + option.selectedText4 + "字符, 请更换选项分隔符");
+    return;
+  }
+  alert("检测通过！！");
 }
 
 // 处理文本
 function handleText() {
-  const regex =
-    option.selectedText === "pause" ? numberPauseRegex : numberDotRegex;
-  const regex2 =
-    option.selectedText === "pause" ? lashPauseRegex : lashDotRegex;
+  const regex = getRegex();
+  const regex2 = getRegex2();
   replaceRegex(regex, option.selectedText2)
-    .replaceRegex(regex2, option.selectedText3)
+    .replaceRegex(regex2, option.selectedText4)
     .replaceRegex(wordEnterRegex, "")
     .trim()
     .trimFirst();
   textarea2.value = originText;
+}
+
+function getRegex() {
+  switch (option.selectedText) {
+    case "pause":
+      return numberPauseRegex;
+    case "dot":
+      return numberDotRegex;
+    case "chineseDot":
+      return numberChineseDotRegex;
+    default:
+      return numberPauseRegex;
+  }
+}
+
+function getRegex2() {
+  switch (option.selectedText3) {
+    case "pause":
+      return lashPauseRegex;
+    case "dot":
+      return lashDotRegex;
+    case "chineseDot":
+      return lashChineseDotRegex;
+    default:
+      return lashPauseRegex;
+  }
 }
 
 function clearText() {
@@ -113,10 +156,14 @@ function clearText() {
 const numberPauseRegex = /\d+、/g;
 // 匹配 数字+点
 const numberDotRegex = /\d+\./g;
+// 匹配 数字+中文点
+const numberChineseDotRegex = /\d+\．/g;
 // 匹配 A-D+顿号
 const lashPauseRegex = /[A-D]+、/g;
 // 匹配 A-D+点
 const lashDotRegex = /[A-D]+\./g;
+// 匹配 A-D+中文点
+const lashChineseDotRegex = /[A-D]+\．/g;
 // 匹配 word 的段落标记
 const wordEnterRegex = /\n/g;
 
@@ -144,7 +191,7 @@ function splitData(data) {
   const dataArray = data.split(option.selectedText2);
   const a = +dataArray.length;
   alert("检测到" + a + "道题");
-  return splitArray(dataArray, option.selectedText3);
+  return splitArray(dataArray, option.selectedText4);
 }
 // 将数组里的每一项通过指定的分割符分割成二维数组
 function splitArray(array, symbol) {
@@ -157,8 +204,16 @@ function splitArray(array, symbol) {
 }
 // 将数组转为excel文件并下载
 function downloadExcel(data) {
+  if (fileName === "") {
+    alert("请输入文件名");
+    return;
+  }
   const workbook = XLSX.utils.book_new();
   const worksheet = XLSX.utils.json_to_sheet(data);
   XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-  XLSX.writeFile(workbook, "out.xlsx");
+  XLSX.writeFile(workbook, fileName + ".xlsx");
+}
+// 检测字符串中是否含有某个字符
+function checkString(str, symbol) {
+  return str.indexOf(symbol) !== -1;
 }
