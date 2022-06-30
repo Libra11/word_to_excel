@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2022-06-28 17:24:10
- * @LastEditTime: 2022-06-30 10:53:58
+ * @LastEditTime: 2022-06-30 13:19:39
  * @LastEditors: Libra
  * @Description:
  * @FilePath: /word_to_excel/main.js
@@ -11,8 +11,6 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
-const ipc = require("electron").ipcMain;
-const dialog = require("electron").dialog;
 
 const createWindow = () => {
   // Create the browser window.
@@ -21,8 +19,6 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      nodeIntegration: true,
-      contextIsolation: false,
     },
   });
 
@@ -62,29 +58,3 @@ if (isDevelopment) {
     require("electron-reloader")(module);
   } catch (err) {}
 }
-
-ipc.on("question-count", function (event, a) {
-  const options = {
-    type: "info",
-    title: "信息",
-    message: "检测到了" + String(a) + "道题",
-  };
-  dialog.showMessageBox(options);
-});
-ipc.on("file-name-err", function (event, a) {
-  dialog.showErrorBox("提示", a);
-});
-ipc.on("detect-ok", function (event, a) {
-  const options = {
-    type: "info",
-    title: "信息",
-    message: String(a),
-  };
-  dialog.showMessageBox(options);
-});
-ipc.on("oid-err", function (event, a) {
-  dialog.showErrorBox("提示", a);
-});
-ipc.on("qid-err", function (event, a) {
-  dialog.showErrorBox("提示", a);
-});

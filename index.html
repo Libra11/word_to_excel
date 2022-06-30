@@ -1,7 +1,7 @@
 <!--
  * @Author: Libra
  * @Date: 2022-06-28 17:24:24
- * @LastEditTime: 2022-06-30 10:58:00
+ * @LastEditTime: 2022-06-30 13:42:47
  * @LastEditors: Libra
  * @Description: 
  * @FilePath: /word_to_excel/index.html
@@ -12,8 +12,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- use the latest version -->
-<script lang="javascript" src="xlsx.full.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <title>Libra</title>
   <style>
     html body {
@@ -43,7 +42,7 @@
       color: #666;
     }
     .container button {
-      width: 80px;
+      padding: 0 10px;
       height: 2.2em;
       border: none;
       border-radius: 4px;
@@ -90,6 +89,11 @@
     ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
       color: rgb(208, 208, 208);
     }
+    #err{
+      color: red;
+      font-size: 14px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -129,18 +133,22 @@
 </div>
 <textarea name="textarea" id="textarea" cols="30" rows="10" placeholder="原始数据"></textarea>
 <div style="display: flex;
-align-items: center;"><button id="button"> <span style="margin-right: 10px;">转换</span> <img width="10" style="color:#fff;" src="./assets//up.svg" alt=""> </button>
-  <button id="btn4" style="margin-left:10px;">清空</button></div>
+align-items: center;">
+  <button id="button"> <span style="margin-right: 10px;">转换</span> <img width="10" style="color:#fff;" src="./assets//up.svg" alt=""> </button>
+  <button id="btn4" style="margin-left:10px;">清空</button>
+</div>
   <textarea name="textarea2" id="textarea2" cols="30" rows="10" placeholder="处理完的数据"></textarea>
   <div style="margin-top: 20px;">
     <span class="label">请输入生成文件名:</span>
     <input type="text" id="input">
   </div>
+  <div id="err"></div>
   <div style="margin-top: 20px;">
-    <button id="btn5">原始检测</button>
-    <button id="btn2">检测</button>
-    <button id="btn">处理</button>
-    <button id="btn3">生成</button>
+    <button id="btn5">原始检测(选择题)</button>
+    <button id="btn2">检测(选择题)</button>
+    <button id="btn">处理(选择题)</button>
+    <button id="btn3">生成(选择题)</button>
+    <button id="btn6">生成(判断题)</button>
   </div>
   </div>
   <script src="render.js"></script>

@@ -1,12 +1,11 @@
 /*
  * @Author: Libra
  * @Date: 2022-06-28 17:39:41
- * @LastEditTime: 2022-06-30 10:44:54
+ * @LastEditTime: 2022-06-30 13:39:24
  * @LastEditors: Libra
  * @Description: 渲染进程
  * @FilePath: /word_to_excel/render.js
  */
-const ipc = require("electron").ipcRenderer;
 // 获取 textarea
 const textarea = document.getElementById("textarea");
 const textarea2 = document.getElementById("textarea2");
@@ -23,6 +22,9 @@ const downloadButton = document.getElementById("btn3");
 const clearButton = document.getElementById("btn4");
 const oriCheckButton = document.getElementById("btn5");
 const transButton = document.getElementById("button");
+const trueFalseButton = document.getElementById("btn6");
+
+const err = document.getElementById("err");
 
 let originText = "";
 let option = {
@@ -72,6 +74,9 @@ oriCheckButton.addEventListener("click", () => {
 transButton.addEventListener("click", () => {
   transText();
 });
+trueFalseButton.addEventListener("click", () => {
+  genTrueFalseQues();
+});
 
 // 下载文本
 function downloadText() {
@@ -83,6 +88,15 @@ function downloadText() {
     .trim()
     .trimFirst();
   const arrData = splitData(originText);
+  downloadExcel(arrData);
+}
+function genTrueFalseQues() {
+  const regex = getRegex();
+  replaceRegex(regex, option.selectedText2)
+    .replaceRegex(wordEnterRegex, "")
+    .trim()
+    .trimFirst();
+  const arrData = splitSelect(originText);
   downloadExcel(arrData);
 }
 // 检测
@@ -100,20 +114,16 @@ function check() {
 // 原始字符检测
 function checkOriginString() {
   if (checkString(originText, option.selectedText2)) {
-    ipc.send(
-      "qid-err",
-      "试题中检测到" + option.selectedText2 + "字符, 请更换题号分隔符"
-    );
+    err.innerText =
+      "试题中检测到" + option.selectedText2 + "字符, 请更换题号分隔符";
     return;
   }
   if (checkString(originText, option.selectedText4)) {
-    ipc.send(
-      "oid-err",
-      "试题中检测到" + option.selectedText4 + "字符, 请更换选项分隔符"
-    );
+    err.innerText =
+      "试题中检测到" + option.selectedText4 + "字符, 请更换选项分隔符";
     return;
   }
-  ipc.send("detect-ok", "检测通过！！");
+  err.innerText = "检测通过！！";
 }
 
 // 转换两个 textarea 的内容
@@ -215,7 +225,7 @@ function trimFirst() {
 function splitData(data) {
   const dataArray = data.split(option.selectedText2);
   const a = +dataArray.length;
-  ipc.send("question-count", a);
+  err.innerText = "共有" + a + "道题";
   return splitArray(dataArray, option.selectedText4);
 }
 // 将数组里的每一项通过指定的分割符分割成二维数组
@@ -227,10 +237,27 @@ function splitArray(array, symbol) {
   }
   return arr;
 }
+// 选择题
+function splitSelect(data) {
+  const dataArray = data.split(option.selectedText2);
+  const a = +dataArray.length;
+  err.innerText = "共有" + a + "道题";
+  return splitArraySelect(dataArray);
+}
+function splitArraySelect(array) {
+  const arr = [];
+  console.log(array);
+  for (let i = 0; i < array.length; i++) {
+    const arr2 = [array[i], "正确", "错误"];
+    arr.push(arr2);
+  }
+  console.log(arr);
+  return arr;
+}
 // 将数组转为excel文件并下载
 function downloadExcel(data) {
   if (fileName === "") {
-    ipc.send("file-name-err", "请输入文件名");
+    err.innerText = "请输入文件名!!";
     return;
   }
   const workbook = XLSX.utils.book_new();
