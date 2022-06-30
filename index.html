@@ -1,7 +1,7 @@
 <!--
  * @Author: Libra
  * @Date: 2022-06-28 17:24:24
- * @LastEditTime: 2022-06-29 14:13:10
+ * @LastEditTime: 2022-06-30 10:58:00
  * @LastEditors: Libra
  * @Description: 
  * @FilePath: /word_to_excel/index.html
@@ -16,6 +16,9 @@
 <script lang="javascript" src="xlsx.full.min.js"></script>
   <title>Libra</title>
   <style>
+    html body {
+      user-select: none;
+    }
     * {
       margin: 0;
       padding: 0;
@@ -28,15 +31,64 @@
       display: flex;
       flex-direction: column;
     }
-    .container #textarea {
+    .container textarea {
       margin: 20px 0;
       width: 100%;
+      padding: 10px;
+      border: none;
+      outline: none;
+      border-radius: 5px;
+      background-color: #f5f5f5;
+      resize: none;
+      color: #666;
     }
     .container button {
-      width: 100px;
+      width: 80px;
+      height: 2.2em;
+      border: none;
+      border-radius: 4px;
+      background-color: #ff9900;
+      color: #fff;
+      cursor: pointer;
+    }
+    .container button:hover {
+      background-color: rgba(255, 153, 0, 0.8);
     }
     select {
       margin-right: 20px;
+      width: 70px;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      border: 1px solid #e1e1e1;
+      border-radius: 4px;
+      height: 2.2em;
+      padding: 0 24px 0 8px;
+      font-family: inherit;
+      color: #666;
+      cursor: pointer;
+      position: relative;
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAASFBMVEUAAAD////Nzc3Nzc3V1dXNzc3MzMzMzMzMzMzNzc3Ozs7j4+PMzMzMzMzMzMzPz8/MzMzNzc3Ozs7Ozs7MzMzNzc3Nzc3Nzc1mbvnCAAAAGHRSTlMAAymOBrtVs9RlPgnPltxPlWwvRJzBt+CSuXutAAAAM0lEQVR4nGMYBbgALycjiGIUZEaTEBLl4WJgEOZgZcLQwybOLsbHj800bhEBFqo7cfACACvdARau8cpxAAAAAElFTkSuQmCC') no-repeat right center;
+    }
+    .container input {
+      padding: 0 10px;
+      border: 1px solid #e1e1e1;
+      outline: none;
+      height: 2.2em;
+      color: #666;
+      border-radius: 4px;
+    }
+    .container .label {
+      font-size: 14px;
+      color: #666;
+    }
+    #button{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: rgb(208, 208, 208);
     }
   </style>
 </head>
@@ -44,21 +96,21 @@
   <div class="container">
     <!-- 下拉框 -->
   <div class="option">
-    题号匹配:
+    <span class="label">题号匹配:</span>
   <select id="select">
     <option value ="pause">顿号</option>
     <option value ="dot">点</option>
     <option value ="chineseDot">中文点</option>
     <option value ="blank">空格</option>
   </select>
-    选项匹配:
+    <span class="label">选项匹配:</span>
   <select id="select3">
     <option value ="pause">顿号</option>
     <option value ="dot">点</option>
     <option value ="chineseDot">中文点</option>
     <option value ="blank">空格</option>
   </select>
-    题号分隔符:
+    <span class="label">题号分隔符:</span>
   <select id="select2">
     <option value ="0">&</option>
     <option value ="1">@</option>
@@ -66,7 +118,7 @@
     <option value ="3">$</option>
     <option value ="4">%</option>
   </select>
-    选项分隔符:
+    <span class="label">选项分隔符:</span>
     <select id="select4">
     <option value ="3">$</option>
     <option value ="0">&</option>
@@ -74,11 +126,14 @@
     <option value ="2">#</option>
     <option value ="4">%</option>
   </select>
-  </div>
-  <textarea name="textarea" id="textarea" cols="30" rows="10"></textarea>
-  <textarea name="textarea2" id="textarea2" cols="30" rows="10"></textarea>
+</div>
+<textarea name="textarea" id="textarea" cols="30" rows="10" placeholder="原始数据"></textarea>
+<div style="display: flex;
+align-items: center;"><button id="button"> <span style="margin-right: 10px;">转换</span> <img width="10" style="color:#fff;" src="./assets//up.svg" alt=""> </button>
+  <button id="btn4" style="margin-left:10px;">清空</button></div>
+  <textarea name="textarea2" id="textarea2" cols="30" rows="10" placeholder="处理完的数据"></textarea>
   <div style="margin-top: 20px;">
-    请输入生成文件名:
+    <span class="label">请输入生成文件名:</span>
     <input type="text" id="input">
   </div>
   <div style="margin-top: 20px;">
@@ -86,7 +141,6 @@
     <button id="btn2">检测</button>
     <button id="btn">处理</button>
     <button id="btn3">生成</button>
-    <button id="btn4">清空</button>
   </div>
   </div>
   <script src="render.js"></script>

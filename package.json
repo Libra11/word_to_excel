@@ -19,13 +19,19 @@
   },
   "build": {
     "appId": "com.xxx.app",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
     "mac": {
+      "icon": "build/logo.icns",
       "target": [
         "dmg",
         "zip"
       ]
     },
     "win": {
+      "icon": "build/logo.ico",
       "target": [
         "nsis",
         "zip"

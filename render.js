@@ -1,11 +1,12 @@
 /*
  * @Author: Libra
  * @Date: 2022-06-28 17:39:41
- * @LastEditTime: 2022-06-29 14:31:47
+ * @LastEditTime: 2022-06-30 10:44:54
  * @LastEditors: Libra
  * @Description: 渲染进程
  * @FilePath: /word_to_excel/render.js
  */
+const ipc = require("electron").ipcRenderer;
 // 获取 textarea
 const textarea = document.getElementById("textarea");
 const textarea2 = document.getElementById("textarea2");
@@ -21,6 +22,7 @@ const checkButton = document.getElementById("btn2");
 const downloadButton = document.getElementById("btn3");
 const clearButton = document.getElementById("btn4");
 const oriCheckButton = document.getElementById("btn5");
+const transButton = document.getElementById("button");
 
 let originText = "";
 let option = {
@@ -67,6 +69,9 @@ clearButton.addEventListener("click", () => {
 oriCheckButton.addEventListener("click", () => {
   checkOriginString();
 });
+transButton.addEventListener("click", () => {
+  transText();
+});
 
 // 下载文本
 function downloadText() {
@@ -95,14 +100,26 @@ function check() {
 // 原始字符检测
 function checkOriginString() {
   if (checkString(originText, option.selectedText2)) {
-    alert("试题中检测到" + option.selectedText2 + "字符, 请更换题号分隔符");
+    ipc.send(
+      "qid-err",
+      "试题中检测到" + option.selectedText2 + "字符, 请更换题号分隔符"
+    );
     return;
   }
   if (checkString(originText, option.selectedText4)) {
-    alert("试题中检测到" + option.selectedText4 + "字符, 请更换选项分隔符");
+    ipc.send(
+      "oid-err",
+      "试题中检测到" + option.selectedText4 + "字符, 请更换选项分隔符"
+    );
     return;
   }
-  alert("检测通过！！");
+  ipc.send("detect-ok", "检测通过！！");
+}
+
+// 转换两个 textarea 的内容
+function transText() {
+  textarea.value = textarea2.value;
+  textarea2.value = "";
 }
 
 // 处理文本
@@ -125,6 +142,8 @@ function getRegex() {
       return numberDotRegex;
     case "chineseDot":
       return numberChineseDotRegex;
+    case "blank":
+      return numberSpaceRegex;
     default:
       return numberPauseRegex;
   }
@@ -138,6 +157,8 @@ function getRegex2() {
       return lashDotRegex;
     case "chineseDot":
       return lashChineseDotRegex;
+    case "blank":
+      return lashSpaceRegex;
     default:
       return lashPauseRegex;
   }
@@ -158,12 +179,16 @@ const numberDotRegex = /\d+\.\D/g;
 // const numberDotRegex = /\d+\./g;
 // 匹配 数字+中文点
 const numberChineseDotRegex = /\d+\．/g;
+// 匹配 数字+空格
+const numberSpaceRegex = /\d+ /g;
 // 匹配 A-D+顿号
 const lashPauseRegex = /[A-D]+、/g;
 // 匹配 A-D+点
 const lashDotRegex = /[A-D]+\./g;
 // 匹配 A-D+中文点
 const lashChineseDotRegex = /[A-D]+\．/g;
+// 匹配 A-D+空格
+const lashSpaceRegex = /[A-D]+ /g;
 // 匹配 word 的段落标记
 const wordEnterRegex = /\n/g;
 
@@ -190,7 +215,7 @@ function trimFirst() {
 function splitData(data) {
   const dataArray = data.split(option.selectedText2);
   const a = +dataArray.length;
-  alert("检测到" + a + "道题");
+  ipc.send("question-count", a);
   return splitArray(dataArray, option.selectedText4);
 }
 // 将数组里的每一项通过指定的分割符分割成二维数组
@@ -205,7 +230,7 @@ function splitArray(array, symbol) {
 // 将数组转为excel文件并下载
 function downloadExcel(data) {
   if (fileName === "") {
-    alert("请输入文件名");
+    ipc.send("file-name-err", "请输入文件名");
     return;
   }
   const workbook = XLSX.utils.book_new();
