@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2022-06-28 17:39:41
- * @LastEditTime: 2022-06-30 13:39:24
+ * @LastEditTime: 2022-07-01 11:11:52
  * @LastEditors: Libra
  * @Description: 渲染进程
  * @FilePath: /word_to_excel/render.js
@@ -82,7 +82,7 @@ trueFalseButton.addEventListener("click", () => {
 function downloadText() {
   const regex = getRegex();
   const regex2 = getRegex2();
-  replaceRegex(regex, option.selectedText2)
+  replaceRegex(regex, option.selectedText2, true)
     .replaceRegex(regex2, option.selectedText4)
     .replaceRegex(wordEnterRegex, "")
     .trim()
@@ -92,7 +92,7 @@ function downloadText() {
 }
 function genTrueFalseQues() {
   const regex = getRegex();
-  replaceRegex(regex, option.selectedText2)
+  replaceRegex(regex, option.selectedText2, true)
     .replaceRegex(wordEnterRegex, "")
     .trim()
     .trimFirst();
@@ -103,7 +103,7 @@ function genTrueFalseQues() {
 function check() {
   const regex = getRegex();
   const regex2 = getRegex2();
-  replaceRegex(regex, option.selectedText2)
+  replaceRegex(regex, option.selectedText2, true)
     .replaceRegex(regex2, option.selectedText4)
     .replaceRegex(wordEnterRegex, "")
     .trim()
@@ -136,7 +136,7 @@ function transText() {
 function handleText() {
   const regex = getRegex();
   const regex2 = getRegex2();
-  replaceRegex(regex, option.selectedText2)
+  replaceRegex(regex, option.selectedText2, true)
     .replaceRegex(regex2, option.selectedText4)
     .replaceRegex(wordEnterRegex, "")
     .trim()
@@ -206,8 +206,15 @@ const wordEnterRegex = /\n/g;
  * 工具函数
  */
 // 替换正则表达式内容为特定字符
-function replaceRegex(regex, replace) {
-  originText = originText.replace(regex, replace);
+function replaceRegex(regex, replace, isFirst = false) {
+  originText = originText.replace(regex, (x) => {
+    if (isFirst) {
+      x = replace + x[x.length - 1];
+    } else {
+      x = replace;
+    }
+    return x;
+  });
   return this;
 }
 // 去掉所有空格
@@ -246,12 +253,10 @@ function splitSelect(data) {
 }
 function splitArraySelect(array) {
   const arr = [];
-  console.log(array);
   for (let i = 0; i < array.length; i++) {
     const arr2 = [array[i], "正确", "错误"];
     arr.push(arr2);
   }
-  console.log(arr);
   return arr;
 }
 // 将数组转为excel文件并下载
