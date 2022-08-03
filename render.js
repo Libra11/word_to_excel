@@ -1,7 +1,7 @@
 /*
  * @Author: Libra
  * @Date: 2022-06-28 17:39:41
- * @LastEditTime: 2022-07-01 11:11:52
+ * @LastEditTime: 2022-08-03 17:52:20
  * @LastEditors: Libra
  * @Description: 渲染进程
  * @FilePath: /word_to_excel/render.js
@@ -136,11 +136,13 @@ function transText() {
 function handleText() {
   const regex = getRegex();
   const regex2 = getRegex2();
+  console.log(option.selectedText2, option.selectedText4)
   replaceRegex(regex, option.selectedText2, true)
     .replaceRegex(regex2, option.selectedText4)
     .replaceRegex(wordEnterRegex, "")
     .trim()
     .trimFirst();
+  console.log(originText, regex)
   textarea2.value = originText;
 }
 
@@ -192,13 +194,13 @@ const numberChineseDotRegex = /\d+\．/g;
 // 匹配 数字+空格
 const numberSpaceRegex = /\d+ /g;
 // 匹配 A-D+顿号
-const lashPauseRegex = /[A-D]+、/g;
+const lashPauseRegex = /[A-Z]+、/g;
 // 匹配 A-D+点
-const lashDotRegex = /[A-D]+\./g;
+const lashDotRegex = /[A-Z]+\./g;
 // 匹配 A-D+中文点
-const lashChineseDotRegex = /[A-D]+\．/g;
+const lashChineseDotRegex = /[A-Z]+\．/g;
 // 匹配 A-D+空格
-const lashSpaceRegex = /[A-D]+ /g;
+const lashSpaceRegex = /[A-Z]+ /g;
 // 匹配 word 的段落标记
 const wordEnterRegex = /\n/g;
 
@@ -209,7 +211,12 @@ const wordEnterRegex = /\n/g;
 function replaceRegex(regex, replace, isFirst = false) {
   originText = originText.replace(regex, (x) => {
     if (isFirst) {
-      x = replace + x[x.length - 1];
+      if (regex + ""===/\d+、/g + "") {
+        x = replace;
+      } else {
+        x = replace + x[x.length - 1];
+      }
+      console.log(x)
     } else {
       x = replace;
     }
